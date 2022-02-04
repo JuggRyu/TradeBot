@@ -3,6 +3,8 @@
 ■説明
 BinanceのADA/USDTを自動売買するBOTです。
 
+また、購入情報はLINEにて通知されます。
+
 ■実行環境:python3.7
 
 ■以下、必要なimportモジュール
