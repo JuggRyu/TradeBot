@@ -22,16 +22,16 @@ position_counts_list = list[range(1,8)]
 start = time.time()
 symbol = "ADAUSDT"
 position_amount=[6,12,18,30,48,78,126,204]
-position_range_1_4 = 0.01 
-position_range_5_6 = 0.0175
-position_range_7_7 = 0.0236
-position_range_8_8 = 0.0236
+entry_range_1_4 = 0.01 
+entry_range_5_6 = 0.0175
+entry_range_7_7 = 0.0236
+entry_range_8_8 = 0.0236
 error_count = 0
 binance_api_key = settings.binance_api_key
 binance_api_secret = settings.binance_api_secret
 line_user_id = settings.line_user_id
 dt_now = datetime.now()
-position_close_timing=[0,position_range_1_4*3,position_range_1_4*1.1,position_range_1_4/2,position_range_1_4*2,position_range_1_4*3,position_range_1_4*4.1,position_range_1_4*6]
+position_close_timing=[0,entry_range_1_4*3,entry_range_1_4*1.1,(-1)*entry_range_1_4/2,(-1)*entry_range_1_4*2,(-1)*entry_range_1_4*3,(-1)*entry_range_1_4*4.1,(-1)*entry_range_1_4*6]
 line_bot_api = LineBotApi(settings.access_token)
 def line_send_message_start(str1,price1):
     global line_bot_api
@@ -93,10 +93,10 @@ while True:# loop task infinite
         global position_amount
         global order_list
         global position_side
-        global position_range_1_4
-        global position_range_5_6
-        global position_range_7_7
-        global position_range_8_8
+        global entry_range_1_4
+        global entry_range_5_6
+        global entry_range_7_7
+        global entry_range_8_8
         now_price = get_last_trade_price(symbol)#ADA/USDT show current price
         multiple_plusorminus = 0
         if position_side == 'BUY':
@@ -110,22 +110,22 @@ while True:# loop task infinite
         if position_amount == 0:                      
             position_side = get_position_status()   #(BUYorSELL)
             binance_get_position_ADAUSDT(position_side,position_amount[0]) 
-        elif 1 <= position_amount <= 4 and multiple_plusorminus*(now_price - (order_list[-1]+multiple_plusorminus_position_close_timing*position_range_1_4)) <= 0:   #ポジション数1~4回&rangeを超えた時
+        elif 1 <= position_amount <= 4 and multiple_plusorminus*(now_price - (order_list[-1]+multiple_plusorminus_position_close_timing*entry_range_1_4)) <= 0:   #ポジション数1~4回&rangeを超えた時
             line_send_message("価格差(最後のエントリーと現在の値段)　",str(multiple_plusorminus*(now_price - order_list[-1])))
             line_send_message("ADA/USDT現在価格　　　　　　　"+position_side+" ",str(now_price))
             line_send_message("ADA/USDT最後のエントリー価格　　"+position_side+" ",str(order_list[-1]))
             binance_get_position_ADAUSDT(position_side,position_amount[position_amount]) 
-        elif 5 <= position_amount <= 6 and multiple_plusorminus*(now_price - (order_list[-1]+multiple_plusorminus_position_close_timing*position_range_5_6)) <= 0: #ポジション数5~6回&rangeを超えた時
+        elif 5 <= position_amount <= 6 and multiple_plusorminus*(now_price - (order_list[-1]+multiple_plusorminus_position_close_timing*entry_range_5_6)) <= 0: #ポジション数5~6回&rangeを超えた時
             line_send_message("価格差(最後のエントリーと現在の値段)　",str(multiple_plusorminus*(now_price - order_list[-1])))
             line_send_message("ADA/USDT現在価格　　　　　　　　"+position_side+" ",str(now_price))
             line_send_message("ADA/USDT最後のエントリー価格　　"+position_side+" ",str(order_list[-1]))
             binance_get_position_ADAUSDT(position_side,position_amount[position_amount]) 
-        elif position_amount == 7 and multiple_plusorminus*(now_price - (order_list[-1]+multiple_plusorminus_position_close_timing*position_range_7_7)) <= 0:      #ポジション数  7回&rangeを超えた時
+        elif position_amount == 7 and multiple_plusorminus*(now_price - (order_list[-1]+multiple_plusorminus_position_close_timing*entry_range_7_7)) <= 0:      #ポジション数  7回&rangeを超えた時
             line_send_message("価格差(最後のエントリーと現在の値段)　",str(multiple_plusorminus*(now_price - order_list[-1])))
             line_send_message("ADA/USDT現在価格　　　　　　　　"+position_side+" ",str(now_price))
             line_send_message("ADA/USDT最後のエントリー価格　　"+position_side+" ",str(order_list[-1]))
             binance_get_position_ADAUSDT(position_side,position_amount[position_amount]) 
-        elif position_amount == 8 and multiple_plusorminus*(now_price - (order_list[-1]+multiple_plusorminus_position_close_timing*position_range_8_8)) <= 0:      #ポジション数  8回&rangeを超えた時
+        elif position_amount == 8 and multiple_plusorminus*(now_price - (order_list[-1]+multiple_plusorminus_position_close_timing*entry_range_8_8)) <= 0:      #ポジション数  8回&rangeを超えた時
             line_send_message("価格差(最後のエントリーと現在の値段)　",str(multiple_plusorminus*(now_price - order_list[-1])))
             line_send_message("ADA/USDT現在価格　　　　　　　　"+position_side+" ",str(now_price))
             line_send_message("ADA/USDT最後のエントリー価格　　"+position_side+" ",str(order_list[-1]))
